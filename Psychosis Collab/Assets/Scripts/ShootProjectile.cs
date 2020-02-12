@@ -10,18 +10,18 @@ public class ShootProjectile : MonoBehaviour
     public float size = 1f;
     public float firerate = 10f;
     float firetimer;
-    public GameObject GunBarrel;
+    public Transform GunBarrel;
     public Transform recoilBeginPos;
     public Transform recoilEndPos;
     public float recoilSpeed;
     public Vector3 currentOffset;
     public Vector3 currentAngleOffset;
-
     [SerializeField]
     private Vector3 gunOrigin;
-
     [SerializeField]
     private Vector3 gunAngleOrigin;
+    public Camera camera;
+  
 
     private void Start()
     {
@@ -39,15 +39,12 @@ public class ShootProjectile : MonoBehaviour
             if (Time.time - firetimer > 1 / firerate)
             {
                 firetimer = Time.time;
-                Rigidbody instantiatedProjectile = Instantiate(projectile, GunBarrel.transform.position, transform.rotation);
-
-                instantiatedProjectile.velocity = Camera.main.transform.forward * speed;
-                instantiatedProjectile.transform.localScale = new Vector3(size, size, size);
-
+                RaycastCheck();
                 Recoil();
 
-                Physics.IgnoreCollision(instantiatedProjectile.GetComponent<SphereCollider>(), GetComponent<CapsuleCollider>());
-                Physics.IgnoreCollision(instantiatedProjectile.GetComponent<SphereCollider>(), GunBarrel.GetComponentInParent<BoxCollider>());
+                //Physics.IgnoreCollision(instantiatedProjectile.GetComponent<SphereCollider>(), GetComponent<CapsuleCollider>());
+                //Physics.IgnoreCollision(instantiatedProjectile.GetComponent<SphereCollider>(), GunBarrel.GetComponentInParent<BoxCollider>());
+   
             }
 
         }
@@ -70,5 +67,28 @@ public class ShootProjectile : MonoBehaviour
         currentAngleOffset += Vector3.left * recoilSpeed;
     }
 
+    public void RaycastCheck()
+    {
+        Vector3 rayOrigin = camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
+        RaycastHit bulletEnd;
+        Vector3 bulletPath;
+
+        if (Physics.Raycast(rayOrigin, camera.transform.forward, out bulletEnd, Mathf.Infinity))
+        {
+            bulletPath = (bulletEnd.point - GunBarrel.position).normalized;
+
+            Quaternion rotation = Quaternion.FromToRotation(projectile.transform.forward, bulletPath);
+            print(rotation);
+            Rigidbody instantiatedProjectile = Instantiate(projectile, GunBarrel.position, rotation);
+            instantiatedProjectile.velocity = instantiatedProjectile.transform.forward * speed;
+            instantiatedProjectile.transform.localScale = new Vector3(size, size, size);
+
+        }
+        
+    }
+
 
 }
+
+
+
