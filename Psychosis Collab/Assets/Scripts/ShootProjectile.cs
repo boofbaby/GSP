@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class ShootProjectile : MonoBehaviour
 {
+    private enum BulletType { Player, Enemy, Neutral};
+    [SerializeField]
+    private BulletType type;
+
     public GameObject gun;
     public Rigidbody projectile;
     public float speed = 20f;
@@ -20,7 +24,6 @@ public class ShootProjectile : MonoBehaviour
     private Vector3 gunOrigin;
     [SerializeField]
     private Vector3 gunAngleOrigin;
-    public Camera camera;
   
 
     private void Start()
@@ -44,7 +47,6 @@ public class ShootProjectile : MonoBehaviour
 
                 //Physics.IgnoreCollision(instantiatedProjectile.GetComponent<SphereCollider>(), GetComponent<CapsuleCollider>());
                 //Physics.IgnoreCollision(instantiatedProjectile.GetComponent<SphereCollider>(), GunBarrel.GetComponentInParent<BoxCollider>());
-   
             }
 
         }
@@ -69,20 +71,31 @@ public class ShootProjectile : MonoBehaviour
 
     public void RaycastCheck()
     {
-        Vector3 rayOrigin = camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
+        Vector3 rayOrigin = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
         RaycastHit bulletEnd;
         Vector3 bulletPath;
 
-        if (Physics.Raycast(rayOrigin, camera.transform.forward, out bulletEnd, Mathf.Infinity))
+        if (Physics.Raycast(rayOrigin, Camera.main.transform.forward, out bulletEnd, Mathf.Infinity))
         {
             bulletPath = (bulletEnd.point - GunBarrel.position).normalized;
 
             Quaternion rotation = Quaternion.FromToRotation(projectile.transform.forward, bulletPath);
-            print(rotation);
+            Debug.Log(rotation);
             Rigidbody instantiatedProjectile = Instantiate(projectile, GunBarrel.position, rotation);
             instantiatedProjectile.velocity = instantiatedProjectile.transform.forward * speed;
             instantiatedProjectile.transform.localScale = new Vector3(size, size, size);
 
+            switch(type)
+            {
+                case BulletType.Player:
+                    instantiatedProjectile.gameObject.layer = 11;
+                    break;
+                case BulletType.Enemy:
+                    instantiatedProjectile.gameObject.layer = 12;
+                    break;
+                case BulletType.Neutral:
+                    break;
+            }
         }
         
     }
