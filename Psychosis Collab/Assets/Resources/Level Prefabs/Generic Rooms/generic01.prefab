@@ -83,7 +83,7 @@ GameObject:
   - component: {fileID: 9138757725521913403}
   m_Layer: 0
   m_Name: Floor
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -171,7 +171,7 @@ GameObject:
   - component: {fileID: 1602040925886185486}
   - component: {fileID: 1122677191821608436}
   m_Layer: 0
-  m_Name: Room
+  m_Name: generic01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -210,6 +210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11723de550d8f304c8bb4b402b60d8a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tier: 0
   neighbors: 00000000
   walls:
   - {fileID: 6217370317062452761}
