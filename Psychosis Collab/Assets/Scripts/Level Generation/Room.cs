@@ -10,10 +10,8 @@ public class Room : MonoBehaviour
 
     private void Start()
     {
-        tier = GameManager.Instance.floor;
+        tier = 3;
 
-
-        //float tier5chance = (GameManager.Instance.floor - 5) * 0.01f;
     }
     
     private void Update()

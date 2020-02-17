@@ -24,19 +24,29 @@ public class ShootProjectile : MonoBehaviour
     private Vector3 gunOrigin;
     [SerializeField]
     private Vector3 gunAngleOrigin;
-  
+
+
+    public GeneratedWeapon currentWeapon;
+    public float baseDamage;
 
     private void Start()
     {
         gunOrigin = gun.transform.localPosition;
         gunAngleOrigin = gun.transform.localEulerAngles;
         currentAngleOffset = Vector3.zero;
+
+        currentWeapon = GameManager.Instance.NewWeapon();
     }
 
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            currentWeapon = GameManager.Instance.NewWeapon();
+        }
+
         if (Input.GetButton("Fire1"))
         {
             if (Time.time - firetimer > 1 / firerate)
@@ -44,7 +54,7 @@ public class ShootProjectile : MonoBehaviour
                 firetimer = Time.time;
                 RaycastCheck();
                 Recoil();
-
+                Debug.Log("Current Damage: " + currentWeapon.damageModifier * baseDamage);
                 //Physics.IgnoreCollision(instantiatedProjectile.GetComponent<SphereCollider>(), GetComponent<CapsuleCollider>());
                 //Physics.IgnoreCollision(instantiatedProjectile.GetComponent<SphereCollider>(), GunBarrel.GetComponentInParent<BoxCollider>());
             }
