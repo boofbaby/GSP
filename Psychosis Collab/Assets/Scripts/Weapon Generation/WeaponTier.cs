@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Weapon Tier", menuName = "Weapon Tier")]
 public class WeaponTier : ScriptableObject
 {
+    public string displayName;
     public float weight;
     public float weightIncreaseModifier;
 

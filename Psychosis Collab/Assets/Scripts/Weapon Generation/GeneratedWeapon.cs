@@ -6,9 +6,6 @@ using UnityEngine;
 [System.Serializable]
 public class GeneratedWeapon
 {
-    /// <summary>
-    /// Add the weapon template here, make it parsed in from the gamemanager
-    /// </summary>
     public WeaponTemplate template;
     public float damageModifier;
     public int reserveAmmunition;
@@ -21,5 +18,23 @@ public class GeneratedWeapon
 
         reserveAmmunition = template.startingAmmunition;
         ammunitionInMagazine = template.roundsPerMagazine;
+    }
+
+    public GeneratedWeapon(GeneratedWeapon _old)
+    {
+        damageModifier = _old.damageModifier;
+        template = _old.template;
+
+        reserveAmmunition = _old.reserveAmmunition;
+        ammunitionInMagazine = _old.ammunitionInMagazine;
+    }
+
+    public void Replace(GeneratedWeapon _old)
+    {
+        damageModifier = _old.damageModifier;
+        template = _old.template;
+
+        reserveAmmunition = _old.reserveAmmunition;
+        ammunitionInMagazine = _old.ammunitionInMagazine;
     }
 }

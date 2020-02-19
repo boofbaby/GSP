@@ -6,24 +6,25 @@ public class Gun : MonoBehaviour
 {
     [Header("Gun")]
     //public WeaponTemplate template;
-    public GameObject gunModel;
-    public Transform gunBarrel;
+    public WeaponModelLink gunModel;
+    public Transform modelOrigin;
+    //public Transform gunBarrel;
     public GeneratedWeapon instance;
     private float firetimer;
     public string state;
 
     [Header("Recoil")]
     //public RecoilPattern recoilPattern;
-    public Transform recoilBeginPos;
-    public Transform recoilEndPos;
+    //public Transform recoilBeginPos;
+    //public Transform recoilEndPos;
     public Vector3 currentOffset;
     public Vector3 currentAngleOffset;
     private Vector3 gunOrigin;
     private Vector3 gunAngleOrigin;
 
     [Header("Projectile")]
-    public Rigidbody projectile;
-    public float bulletVelocity = 20f;
+    //public Rigidbody projectile;
+    //public float bulletVelocity = 20f;
     public Vector3 bulletScale = new Vector3(1.0f, 1.0f, 1.0f);
     private enum BulletType { Player, Enemy, Neutral };
     [SerializeField]
@@ -32,9 +33,12 @@ public class Gun : MonoBehaviour
     private void Start()
     {
         InitializeVariables();
+        SpawnModel();
     }
     private void Update()
     {
+        if (gunModel == null) SpawnModel();
+
         TakeInput();
 
         gunModel.transform.localPosition = gunOrigin + currentOffset;
@@ -51,21 +55,20 @@ public class Gun : MonoBehaviour
         gunOrigin = gunModel.transform.localPosition;
         gunAngleOrigin = gunModel.transform.localEulerAngles;
         currentAngleOffset = Vector3.zero;
-        instance = GameManager.Instance.NewWeapon();
 
         state = "normal";
     }
 
     private void TakeInput()
     {
-        // DEBUG
-        if (Input.GetKeyDown(KeyCode.R) && instance.ammunitionInMagazine < instance.template.roundsPerMagazine)
+        // Reload
+        if (Input.GetKeyDown(KeyCode.R) && instance.ammunitionInMagazine < instance.template.roundsPerMagazine && instance.reserveAmmunition > 0)
         {
             StartCoroutine(Reload());
         }
-        // DEBUG END
 
-        if ((Time.time - firetimer > 1 / instance.template.fireRate))
+        // Shoot
+        if ((Time.time - firetimer > 1 / instance.template.fireRate) && (state != "reload"))
         {
             switch (instance.template.fireMode)
             {
@@ -90,12 +93,12 @@ public class Gun : MonoBehaviour
 
         if (Physics.Raycast(rayOrigin, Camera.main.transform.forward, out bulletEnd, Mathf.Infinity))
         {
-            bulletPath = (bulletEnd.point - gunBarrel.position).normalized;
+            bulletPath = (bulletEnd.point - gunModel.gunBarrel.position).normalized;
             //Debug.Log(bulletEnd.collider.gameObject.tag);
-            return Quaternion.FromToRotation(projectile.transform.forward, bulletPath);
+            return Quaternion.FromToRotation(instance.template.projectile.transform.forward, bulletPath);
         }
 
-        return new Quaternion();
+        return Camera.main.transform.rotation;
     }
 
     private void Recoil()
@@ -118,9 +121,9 @@ public class Gun : MonoBehaviour
             firetimer = Time.time;
             Quaternion rotation = RaycastCheck();
 
-            Rigidbody instantiatedProjectile = Instantiate(projectile, gunBarrel.position, rotation);
-            instantiatedProjectile.velocity = instantiatedProjectile.transform.forward * bulletVelocity;
-            instantiatedProjectile.GetComponent<BulletController>().lifetime = instance.template.bulletLifetime;
+            Rigidbody instantiatedProjectile = Instantiate(instance.template.projectile, gunModel.gunBarrel.position, rotation).GetComponent<Rigidbody>();
+            instantiatedProjectile.velocity = instantiatedProjectile.transform.forward * instance.template.projectileVelocity;
+            instantiatedProjectile.GetComponent<BulletController>().lifetime = instance.template.projectileLifetime;
             instantiatedProjectile.transform.localScale = bulletScale;
 
             switch (type)
@@ -144,6 +147,13 @@ public class Gun : MonoBehaviour
         {
             StartCoroutine(Reload());
         }
+    }
+
+    public void SpawnModel()
+    {
+        if (gunModel != null) Destroy(gunModel.gameObject);
+        gunModel = Instantiate(instance.template.model).GetComponent<WeaponModelLink>();
+        gunModel.transform.SetParent(modelOrigin);
     }
 
     public IEnumerator QueueBullet(int _numberOfBullets)

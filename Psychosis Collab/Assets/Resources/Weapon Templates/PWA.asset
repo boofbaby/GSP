@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d080c6edd75f4d345a334d8f2571c9a3, type: 3}
+  m_Name: PWA
+  m_EditorClassIdentifier: 
+  fireMode: 1
+  model: {fileID: 5755927941191064496, guid: 327102720723f87478bee7be400b8efc, type: 3}
+  recoilPattern: {fileID: 11400000, guid: 56d86f6b6f884d34d8ac5eed6d4a5724, type: 2}
+  baseDamage: 25
+  fireRate: 1
+  projectileVelocity: 100
+  projectileLifetime: 1
+  projectileScale: {x: 0.5, y: 0.5, z: 0.5}
+  projectile: {fileID: 2738065429611290423, guid: 692fa8097bc63984e9fd0df1a7ebab09,
+    type: 3}
+  reloadTime: 5
+  startingAmmunition: 9
+  maxAmmunition: 30
+  roundsPerMagazine: 9
+  burstAmount: 0
+  burstSpeed: 0
