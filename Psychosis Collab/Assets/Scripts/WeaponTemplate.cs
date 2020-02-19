@@ -6,11 +6,19 @@ using UnityEngine;
 public class WeaponTemplate : ScriptableObject
 {
     public enum WeaponFireMode { Auto, Semi, Burst };
-    public WeaponFireMode fireMode;
 
+    [Header("Basic")]
+    public WeaponFireMode fireMode;
+    public RecoilPattern recoilPattern;
     public float baseDamage;
     public float fireRate;
     public float bulletLifetime;
+
+    [Header("Ammunition")]
+    public float reloadTime;
+    public int startingAmmunition;
+    public int maxAmmunition;
+    public int roundsPerMagazine;
 
     [Header("Burst Only")]
     public int burstAmount;

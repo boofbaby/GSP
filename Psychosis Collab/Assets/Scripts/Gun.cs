@@ -5,14 +5,15 @@ using UnityEngine;
 public class Gun : MonoBehaviour
 {
     [Header("Gun")]
-    public WeaponTemplate template;
+    //public WeaponTemplate template;
     public GameObject gunModel;
     public Transform gunBarrel;
     public GeneratedWeapon instance;
     private float firetimer;
+    public string state;
 
     [Header("Recoil")]
-    public RecoilPattern recoilPattern;
+    //public RecoilPattern recoilPattern;
     public Transform recoilBeginPos;
     public Transform recoilEndPos;
     public Vector3 currentOffset;
@@ -51,20 +52,22 @@ public class Gun : MonoBehaviour
         gunAngleOrigin = gunModel.transform.localEulerAngles;
         currentAngleOffset = Vector3.zero;
         instance = GameManager.Instance.NewWeapon();
+
+        state = "normal";
     }
 
     private void TakeInput()
     {
         // DEBUG
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && instance.ammunitionInMagazine < instance.template.roundsPerMagazine)
         {
-            instance = GameManager.Instance.NewWeapon();
+            StartCoroutine(Reload());
         }
         // DEBUG END
 
-        if ((Time.time - firetimer > 1 / template.fireRate))
+        if ((Time.time - firetimer > 1 / instance.template.fireRate))
         {
-            switch (template.fireMode)
+            switch (instance.template.fireMode)
             {
                 case WeaponTemplate.WeaponFireMode.Auto:
                         if (Input.GetButton("Fire1")) Shoot();
@@ -73,7 +76,7 @@ public class Gun : MonoBehaviour
                         if (Input.GetButtonDown("Fire1")) Shoot();
                     break;
                 case WeaponTemplate.WeaponFireMode.Burst:
-                    if (Input.GetButtonDown("Fire1")) StartCoroutine(QueueBullet(template.burstAmount));
+                    if (Input.GetButtonDown("Fire1")) StartCoroutine(QueueBullet(instance.template.burstAmount));
                     break;
             }
         }
@@ -88,7 +91,7 @@ public class Gun : MonoBehaviour
         if (Physics.Raycast(rayOrigin, Camera.main.transform.forward, out bulletEnd, Mathf.Infinity))
         {
             bulletPath = (bulletEnd.point - gunBarrel.position).normalized;
-
+            //Debug.Log(bulletEnd.collider.gameObject.tag);
             return Quaternion.FromToRotation(projectile.transform.forward, bulletPath);
         }
 
@@ -97,10 +100,9 @@ public class Gun : MonoBehaviour
 
     private void Recoil()
     {
-
-        currentOffset += Vector3.back * recoilPattern.speed;
-        currentOffset += Vector3.up * recoilPattern.speed / 3;
-        currentAngleOffset += Vector3.left * recoilPattern.speed;
+        currentOffset += Vector3.back * instance.template.recoilPattern.speed;
+        currentOffset += Vector3.up * instance.template.recoilPattern.speed / 3;
+        currentAngleOffset += Vector3.left * instance.template.recoilPattern.speed;
     }
 
     private void LerpModelPosition()
@@ -111,27 +113,37 @@ public class Gun : MonoBehaviour
     
     private void Shoot()
     {
-        firetimer = Time.time;
-        Quaternion rotation = RaycastCheck();
-
-        Rigidbody instantiatedProjectile = Instantiate(projectile, gunBarrel.position, rotation);
-        instantiatedProjectile.velocity = instantiatedProjectile.transform.forward * bulletVelocity;
-        instantiatedProjectile.GetComponent<BulletController>().lifetime = template.bulletLifetime;
-        instantiatedProjectile.transform.localScale = bulletScale;
-
-        switch (type)
+        if ((instance.ammunitionInMagazine > 0) && (state != "reload"))
         {
-            case BulletType.Player:
-                instantiatedProjectile.gameObject.layer = 11;
-                break;
-            case BulletType.Enemy:
-                instantiatedProjectile.gameObject.layer = 12;
-                break;
-            case BulletType.Neutral:
-                break;
+            firetimer = Time.time;
+            Quaternion rotation = RaycastCheck();
+
+            Rigidbody instantiatedProjectile = Instantiate(projectile, gunBarrel.position, rotation);
+            instantiatedProjectile.velocity = instantiatedProjectile.transform.forward * bulletVelocity;
+            instantiatedProjectile.GetComponent<BulletController>().lifetime = instance.template.bulletLifetime;
+            instantiatedProjectile.transform.localScale = bulletScale;
+
+            switch (type)
+            {
+                case BulletType.Player:
+                    instantiatedProjectile.gameObject.layer = 11;
+                    break;
+                case BulletType.Enemy:
+                    instantiatedProjectile.gameObject.layer = 12;
+                    break;
+                case BulletType.Neutral:
+                    break;
+            }
+
+            Recoil();
+
+            instance.ammunitionInMagazine--;
         }
 
-        Recoil();
+        if (state != "reload" && instance.ammunitionInMagazine <= 0 && instance.reserveAmmunition > 0)
+        {
+            StartCoroutine(Reload());
+        }
     }
 
     public IEnumerator QueueBullet(int _numberOfBullets)
@@ -139,8 +151,36 @@ public class Gun : MonoBehaviour
         for (int i = 0; i < _numberOfBullets; i++)
         {
             Shoot();
-            yield return new WaitForSecondsRealtime(template.burstSpeed);
+            yield return new WaitForSecondsRealtime(instance.template.burstSpeed);
         }
+        yield return null;
+    }
+
+    public IEnumerator Reload()
+    {
+        state = "reload";
+        yield return new WaitForSecondsRealtime(instance.template.reloadTime);
+
+        if (instance.reserveAmmunition >= instance.template.roundsPerMagazine)
+        {
+            instance.reserveAmmunition -= instance.template.roundsPerMagazine - instance.ammunitionInMagazine;
+            instance.ammunitionInMagazine = instance.template.roundsPerMagazine;
+        }
+        else
+        {
+            if (instance.ammunitionInMagazine + instance.reserveAmmunition <= instance.template.roundsPerMagazine)
+            {
+                instance.ammunitionInMagazine += instance.reserveAmmunition;
+                instance.reserveAmmunition = 0;
+            }
+            else
+            {
+                instance.reserveAmmunition = instance.ammunitionInMagazine + instance.reserveAmmunition - instance.template.roundsPerMagazine;
+                instance.ammunitionInMagazine = instance.template.roundsPerMagazine;
+            }
+        }
+
+        state = "normal";
         yield return null;
     }
 }
