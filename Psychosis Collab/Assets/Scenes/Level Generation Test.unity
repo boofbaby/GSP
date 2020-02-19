@@ -353,7 +353,7 @@ GameObject:
   - component: {fileID: 600385428}
   - component: {fileID: 600385427}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Game Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -373,6 +373,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   score: 0
   floor: 0
+  weaponTiers: []
 --- !u!4 &600385428
 Transform:
   m_ObjectHideFlags: 0
@@ -418,7 +419,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapDimensions: {x: 50, y: 50}
   numberOfRooms: {x: 50, y: 100}
-  player: {fileID: 2352939958043524597, guid: 7398034f9620dfe43984a46698bdf159, type: 3}
+  player: {fileID: 8676592398499200527, guid: 6d7fba6380dcbb44a8e0716ee9990e6f, type: 3}
   unitsPerRoom: {x: 10, y: 10}
 --- !u!4 &839988110
 Transform:
