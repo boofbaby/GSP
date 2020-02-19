@@ -37,12 +37,12 @@ public class GameManager : MonoBehaviour
 
     public GeneratedWeapon NewWeapon()
     {
-        /// Pick a weapon tier and generate the weapon etc etc lel lel faggot
+        // Pick a weapon tier and generate the weapon etc
         return new GeneratedWeapon(weaponTiers[Random.Range(0, weaponTiers.Length)]);
     }
     public GeneratedWeapon NewWeapon(int _mod)
     {
-        /// Pick a weapon tier and generate the weapon etc etc lel lel faggot
+        // Pick a weapon tier and generate the weapon etc
         return new GeneratedWeapon(weaponTiers[0]);
     }
 }
