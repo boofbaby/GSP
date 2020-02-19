@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d080c6edd75f4d345a334d8f2571c9a3, type: 3}
+  m_Name: Burst Rifle
+  m_EditorClassIdentifier: 
+  fireMode: 2
+  recoilPattern: {fileID: 11400000, guid: 56d86f6b6f884d34d8ac5eed6d4a5724, type: 2}
+  baseDamage: 3.5
+  fireRate: 5
+  bulletLifetime: 1
+  reloadTime: 2.39
+  startingAmmunition: 180
+  maxAmmunition: 180
+  roundsPerMagazine: 30
+  burstAmount: 3
+  burstSpeed: 0.05

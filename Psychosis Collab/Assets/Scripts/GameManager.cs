@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public int score;
     public int floor;
     public WeaponTier[] weaponTiers;
+    public WeaponTemplate[] weaponTemplates;
     public GeneratedWeapon example;
 
     public void Awake()
@@ -33,17 +34,18 @@ public class GameManager : MonoBehaviour
     private void LoadResources()
     {
         weaponTiers = Resources.LoadAll<WeaponTier>("Weapon Tiers");
+        weaponTemplates = Resources.LoadAll<WeaponTemplate>("Weapon Templates");
     }
 
     public GeneratedWeapon NewWeapon()
     {
         // Pick a weapon tier and generate the weapon etc
-        return new GeneratedWeapon(weaponTiers[Random.Range(0, weaponTiers.Length)]);
+        return new GeneratedWeapon(weaponTiers[Random.Range(0,weaponTiers.Length)], weaponTemplates[Random.Range(0, weaponTemplates.Length)]);
     }
 
     public GeneratedWeapon NewWeapon(int _mod)
     {
         // Pick a weapon tier and generate the weapon etc
-        return new GeneratedWeapon(weaponTiers[0]);
+        return new GeneratedWeapon(weaponTiers[Random.Range(0, weaponTiers.Length)], weaponTemplates[Random.Range(0, weaponTemplates.Length)]);
     }
 }
