@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcec9d55c9305b146aa5f39344596347, type: 3}
   m_Name: Uncommon
   m_EditorClassIdentifier: 
-  weight: 0.5
-  weightIncreaseModifier: 2
-  damageModifier: {x: 0.5, y: 2}
+  displayName: Uncommon
+  weight: 1
+  weightIncreaseModifier: 1
+  damageModifier: {x: 1.25, y: 1.5}

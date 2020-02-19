@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8676592398499200522}
   - component: {fileID: 8676592398499200521}
   - component: {fileID: 8676592398499200520}
-  - component: {fileID: 8676592398499200523}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -45,10 +44,9 @@ Camera:
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
+  m_GateFitMode: 2
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
@@ -84,19 +82,3 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8676592398499200527}
   m_Enabled: 1
---- !u!114 &8676592398499200523
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8676592398499200527}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3544af7ec2e155241880c33fc0e5c0f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PV: {fileID: 0}
-  xMouseSensitivity: 100
-  yMouseSensitivity: 100
-  playerBody: {fileID: 0}

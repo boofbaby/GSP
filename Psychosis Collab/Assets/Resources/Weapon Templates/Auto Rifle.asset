@@ -12,11 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d080c6edd75f4d345a334d8f2571c9a3, type: 3}
   m_Name: Auto Rifle
   m_EditorClassIdentifier: 
-  fireMode: 1
+  fireMode: 0
+  model: {fileID: 4028604766608799025, guid: 9c521830b64591240a1d2d40c8c12da4, type: 3}
   recoilPattern: {fileID: 11400000, guid: 56d86f6b6f884d34d8ac5eed6d4a5724, type: 2}
   baseDamage: 3.5
   fireRate: 5
-  bulletLifetime: 1
+  projectileVelocity: 10
+  projectileLifetime: 1
+  projectileScale: {x: 1, y: 1, z: 1}
+  projectile: {fileID: 2738065429611290423, guid: 692fa8097bc63984e9fd0df1a7ebab09,
+    type: 3}
   reloadTime: 2.39
   startingAmmunition: 180
   maxAmmunition: 180

@@ -10,8 +10,6 @@ public class Room : MonoBehaviour
 
     private void Start()
     {
-        tier = 3;
-
     }
     
     private void Update()
@@ -26,5 +24,7 @@ public class Room : MonoBehaviour
             if (!neighbors[i]) walls[i].SetActive(true);
             else walls[i].SetActive(false);
         }
+
+        tier = Random.Range(1, 6);
     }
 }

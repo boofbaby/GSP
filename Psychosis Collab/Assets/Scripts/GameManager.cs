@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
 
     public int score;
     public int floor;
+    public PlayerData currentPlayerData;
+
     public WeaponTier[] weaponTiers;
     public WeaponTemplate[] weaponTemplates;
     public GeneratedWeapon example;
@@ -46,6 +48,34 @@ public class GameManager : MonoBehaviour
     public GeneratedWeapon NewWeapon(int _mod)
     {
         // Pick a weapon tier and generate the weapon etc
-        return new GeneratedWeapon(weaponTiers[Random.Range(0, weaponTiers.Length)], weaponTemplates[Random.Range(0, weaponTemplates.Length)]);
+        float totalWeight = 0.0f;
+        int chosenIndex = 0;
+        float currentWeight = 0.0f;
+
+        for (int i = 0; i < weaponTiers.Length; i++)
+        {
+            totalWeight += weaponTiers[i].weight * (weaponTiers[i].weightIncreaseModifier * _mod);
+        }
+
+        float choice = Random.value * totalWeight;
+
+
+
+        float total = 0.0f;
+
+        for (int i = 0; i < weaponTiers.Length; i++)
+        {
+            total += weaponTiers[i].weight * (weaponTiers[i].weightIncreaseModifier * _mod);
+
+            if (total > choice)
+            {
+                chosenIndex = i;
+                break;
+            }
+        }
+
+        Debug.Log(weaponTiers[chosenIndex].displayName);
+
+        return new GeneratedWeapon(weaponTiers[chosenIndex], weaponTemplates[Random.Range(0, weaponTemplates.Length)]);
     }
 }

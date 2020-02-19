@@ -13,10 +13,15 @@ MonoBehaviour:
   m_Name: Burst Rifle
   m_EditorClassIdentifier: 
   fireMode: 2
+  model: {fileID: 5540754280585769973, guid: 48cdc0b94ed03f6439388e0604bdcb99, type: 3}
   recoilPattern: {fileID: 11400000, guid: 56d86f6b6f884d34d8ac5eed6d4a5724, type: 2}
   baseDamage: 3.5
-  fireRate: 5
-  bulletLifetime: 1
+  fireRate: 2
+  projectileVelocity: 10
+  projectileLifetime: 1
+  projectileScale: {x: 1, y: 1, z: 1}
+  projectile: {fileID: 2738065429611290423, guid: 692fa8097bc63984e9fd0df1a7ebab09,
+    type: 3}
   reloadTime: 2.39
   startingAmmunition: 180
   maxAmmunition: 180
