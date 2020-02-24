@@ -6,6 +6,7 @@ public class BulletController : MonoBehaviour
 {
     public GameObject impact;
     public float lifetime;
+    public int bounces;
 
     private float spawnTime;
     
@@ -17,6 +18,12 @@ public class BulletController : MonoBehaviour
     void Update()
     {
         if (Time.time > spawnTime + lifetime) Die();
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (bounces <= 0) Die();
+        else bounces--;
     }
 
     private void Die()

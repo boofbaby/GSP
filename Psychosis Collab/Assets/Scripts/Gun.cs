@@ -5,26 +5,19 @@ using UnityEngine;
 public class Gun : MonoBehaviour
 {
     [Header("Gun")]
-    //public WeaponTemplate template;
     public WeaponModelLink gunModel;
     public Transform modelOrigin;
-    //public Transform gunBarrel;
     public GeneratedWeapon instance;
     private float firetimer;
     public string state;
 
     [Header("Recoil")]
-    //public RecoilPattern recoilPattern;
-    //public Transform recoilBeginPos;
-    //public Transform recoilEndPos;
     public Vector3 currentOffset;
     public Vector3 currentAngleOffset;
     private Vector3 gunOrigin;
     private Vector3 gunAngleOrigin;
 
     [Header("Projectile")]
-    //public Rigidbody projectile;
-    //public float bulletVelocity = 20f;
     public Vector3 bulletScale = new Vector3(1.0f, 1.0f, 1.0f);
     private enum BulletType { Player, Enemy, Neutral };
     [SerializeField]
@@ -110,8 +103,8 @@ public class Gun : MonoBehaviour
 
     private void LerpModelPosition()
     {
-        currentOffset = Vector3.Lerp(currentOffset, Vector3.zero, 0.1f);
-        currentAngleOffset = Vector3.Lerp(currentAngleOffset, Vector3.zero, 0.1f);
+        currentOffset = Vector3.Lerp(currentOffset, Vector3.zero, 0.01f);
+        currentAngleOffset = Vector3.Lerp(currentAngleOffset, Vector3.zero, 0.01f);
     }
     
     private void Shoot()
@@ -124,6 +117,7 @@ public class Gun : MonoBehaviour
             Rigidbody instantiatedProjectile = Instantiate(instance.template.projectile, gunModel.gunBarrel.position, rotation).GetComponent<Rigidbody>();
             instantiatedProjectile.velocity = instantiatedProjectile.transform.forward * instance.template.projectileVelocity;
             instantiatedProjectile.GetComponent<BulletController>().lifetime = instance.template.projectileLifetime;
+            instantiatedProjectile.GetComponent<BulletController>().bounces = instance.template.bounces;
             instantiatedProjectile.transform.localScale = bulletScale;
 
             switch (type)
@@ -151,6 +145,7 @@ public class Gun : MonoBehaviour
 
     public void SpawnModel()
     {
+        StopAllCoroutines();
         if (gunModel != null) Destroy(gunModel.gameObject);
         gunModel = Instantiate(instance.template.model).GetComponent<WeaponModelLink>();
         gunModel.transform.SetParent(modelOrigin);

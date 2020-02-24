@@ -19,6 +19,7 @@ public class WeaponTemplate : ScriptableObject
     public float projectileLifetime = 1.0f;
     public Vector3 projectileScale = new Vector3(1.0f, 1.0f, 1.0f);
     public GameObject projectile;
+    public int bounces = 0;
 
     [Header("Ammunition")]
     public float reloadTime = 2.0f;
