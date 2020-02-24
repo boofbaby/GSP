@@ -373,7 +373,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   score: 0
   floor: 0
+  currentPlayerData:
+    health: 0
+    maxHealth: 0
+    speed: 0
+    weapon:
+      template: {fileID: 0}
+      damageModifier: 0
+      reserveAmmunition: 0
+      ammunitionInMagazine: 0
   weaponTiers: []
+  weaponTemplates: []
+  example:
+    template: {fileID: 0}
+    damageModifier: 0
+    reserveAmmunition: 0
+    ammunitionInMagazine: 0
 --- !u!4 &600385428
 Transform:
   m_ObjectHideFlags: 0
