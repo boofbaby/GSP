@@ -17,6 +17,11 @@ public class LevelGenerator : MonoBehaviour
 
     private GameObject[] genericRooms;
     private GameObject[] bossRooms;
+    private GameObject[] spiritRooms;
+    private GameObject[] treasureRooms;
+    private Vector2Int origin;
+    private GameObject playerInstance;
+    private GameObject spiritInstance;
 
     void Start()
     {
@@ -31,10 +36,17 @@ public class LevelGenerator : MonoBehaviour
         SetDoors();
         InitializeRooms();
     }
-    
-    void Update()
+
+    private void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            SpawnSpirit();
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            ReactivatePlayer();
+        }
     }
 
     private void CreateRooms()
@@ -43,10 +55,10 @@ public class LevelGenerator : MonoBehaviour
 
         float randomCompare = 0.01f, randomCompareStart = 0.01f, randomCompareEnd = 0.01f;
         
-        Vector2Int origin = new Vector2Int(Mathf.RoundToInt(mapDimensions.x / 2), Mathf.RoundToInt(mapDimensions.y / 2));
+        origin = new Vector2Int(Mathf.RoundToInt(mapDimensions.x / 2), Mathf.RoundToInt(mapDimensions.y / 2));
         CreateRoom(origin, 0);
-        GameObject p = Instantiate(player);
-        p.transform.position = rooms[origin.x, origin.y].transform.position + new Vector3(0,1,0);
+        playerInstance = Instantiate(player);
+        playerInstance.transform.position = rooms[origin.x, origin.y].transform.position + new Vector3(0,1,0);
 
         int iterations = 0;
 
@@ -70,6 +82,39 @@ public class LevelGenerator : MonoBehaviour
             if (i == selectedNumberOfRooms - 2) CreateRoom(checkPos, 1);
             else CreateRoom(checkPos, 0);
         }
+
+        // Create a spirit room
+        AddRoom(2);
+
+        AddRoom(3);
+    }
+
+    public void SpawnSpirit()
+    {
+        playerInstance.SetActive(false);
+
+        if (spiritInstance == null)
+        {
+            spiritInstance = Instantiate(player);
+            spiritInstance.layer = 16;
+            Transform[] ts = GetComponentsInChildren<Transform>();
+            for (int i = 0; i < ts.Length; i++)
+            {
+                ts[i].gameObject.layer = 16;
+            }
+        }
+        else
+        {
+            spiritInstance.SetActive(true);
+        }
+        
+        spiritInstance.transform.position = rooms[origin.x, origin.y].transform.position + new Vector3(0, 3, 0);
+    }
+
+    public void ReactivatePlayer()
+    {
+        spiritInstance.SetActive(false);
+        playerInstance.SetActive(true);
     }
 
     private Vector2Int NewPosition()
@@ -202,6 +247,12 @@ public class LevelGenerator : MonoBehaviour
                 case 1:
                     rooms[_position.x, _position.y] = Instantiate(bossRooms[Random.Range(0, bossRooms.Length)]).GetComponent<Room>();
                     break;
+                case 2:
+                    rooms[_position.x, _position.y] = Instantiate(spiritRooms[Random.Range(0, spiritRooms.Length)]).GetComponent<Room>();
+                    break;
+                case 3:
+                    rooms[_position.x, _position.y] = Instantiate(treasureRooms[Random.Range(0, treasureRooms.Length)]).GetComponent<Room>();
+                    break;
             }
             
             rooms[_position.x, _position.y].transform.position = new Vector3(unitsPerRoom.x * _position.x, 0, unitsPerRoom.y * _position.y);
@@ -271,9 +322,34 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
+    private void AddRoom(int _type)
+    {
+        Vector2Int checkPos = Vector2Int.zero;
+        int iterations = 0;
+        float randomCompare = 0.01f, randomCompareStart = 0.01f, randomCompareEnd = 0.01f;
+        
+        checkPos = NewPosition();
+
+        if (NumberOfNeighbors(checkPos) > 1 && Random.value > randomCompare)
+        {
+            iterations = 0;
+            do
+            {
+                checkPos = SelectiveNewPosition();
+                iterations++;
+            } while (NumberOfNeighbors(checkPos) > 1 && iterations < 100);
+            if (iterations >= 50)
+                print("error: could not create with fewer neighbors than : " + NumberOfNeighbors(checkPos));
+        }
+
+        CreateRoom(checkPos, _type);
+    }
+
     private void LoadResources()
     {
         genericRooms = Resources.LoadAll<GameObject>("Level Prefabs/Generic Rooms");
         bossRooms = Resources.LoadAll<GameObject>("Level Prefabs/Boss Rooms");
+        spiritRooms = Resources.LoadAll<GameObject>("Level Prefabs/Spirit Rooms");
+        treasureRooms = Resources.LoadAll<GameObject>("Level Prefabs/Treasure Rooms");
     }
 }

@@ -7,6 +7,7 @@ public class Room : MonoBehaviour
     public int tier;
     public bool[] neighbors;
     public GameObject[] walls;
+    public GameObject[] plugs;
 
     private void Start()
     {
@@ -21,8 +22,16 @@ public class Room : MonoBehaviour
     {
         for (int i = 0; i < neighbors.Length; i++)
         {
-            if (!neighbors[i]) walls[i].SetActive(true);
-            else walls[i].SetActive(false);
+            if (!neighbors[i])
+            {
+                walls[i].SetActive(true);
+                plugs[i].SetActive(false);
+            }
+            else
+            {
+                walls[i].SetActive(false);
+                plugs[i].SetActive(true);
+            }
         }
 
         tier = Random.Range(1, 6);

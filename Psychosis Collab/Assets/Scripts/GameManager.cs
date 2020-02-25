@@ -50,7 +50,6 @@ public class GameManager : MonoBehaviour
         // Pick a weapon tier and generate the weapon etc
         float totalWeight = 0.0f;
         int chosenIndex = 0;
-        float currentWeight = 0.0f;
 
         for (int i = 0; i < weaponTiers.Length; i++)
         {

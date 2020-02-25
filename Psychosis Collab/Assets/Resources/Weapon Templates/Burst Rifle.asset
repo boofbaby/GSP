@@ -17,8 +17,8 @@ MonoBehaviour:
   recoilPattern: {fileID: 11400000, guid: 56d86f6b6f884d34d8ac5eed6d4a5724, type: 2}
   baseDamage: 3.5
   fireRate: 2
-  projectileVelocity: 20
-  projectileLifetime: 5
+  projectileVelocity: 35
+  projectileLifetime: 1
   projectileScale: {x: 1, y: 1, z: 1}
   projectile: {fileID: 2738065429611290423, guid: 692fa8097bc63984e9fd0df1a7ebab09,
     type: 3}

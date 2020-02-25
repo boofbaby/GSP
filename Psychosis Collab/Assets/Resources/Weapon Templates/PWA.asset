@@ -20,8 +20,9 @@ MonoBehaviour:
   projectileVelocity: 100
   projectileLifetime: 1
   projectileScale: {x: 0.5, y: 0.5, z: 0.5}
-  projectile: {fileID: 2738065429611290423, guid: 692fa8097bc63984e9fd0df1a7ebab09,
+  projectile: {fileID: 3329016122055998007, guid: 95719cb9a1fcf4d4ab6f5d1dc498172f,
     type: 3}
+  bounces: 0
   reloadTime: 5
   startingAmmunition: 9
   maxAmmunition: 30

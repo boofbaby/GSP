@@ -732,7 +732,7 @@ MonoBehaviour:
       template: {fileID: 11400000, guid: c72a346bebb1c6a4f88e9d5802a05950, type: 2}
       damageModifier: 1
       reserveAmmunition: 180
-      ammunitionInMagazine: 30
+      ammunitionInMagazine: 300
   weaponTiers: []
   weaponTemplates: []
   example:
