@@ -149,6 +149,7 @@ public class Gun : MonoBehaviour
         if (gunModel != null) Destroy(gunModel.gameObject);
         gunModel = Instantiate(instance.template.model).GetComponent<WeaponModelLink>();
         gunModel.transform.SetParent(modelOrigin);
+        state = "normal";
     }
 
     public IEnumerator QueueBullet(int _numberOfBullets)

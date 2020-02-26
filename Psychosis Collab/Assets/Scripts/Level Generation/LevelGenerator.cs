@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using UnityEngine.Rendering.PostProcessing;
 
 public class LevelGenerator : MonoBehaviour
 {
@@ -12,6 +13,10 @@ public class LevelGenerator : MonoBehaviour
     public Vector2 unitsPerRoom;
     public Room[,] rooms;
 
+    public PostProcessProfile normalWorldProfile;
+    public PostProcessProfile spiritWorldProfile;
+    public LayerMask spiritWorldLayerMask;
+
     private List<Vector2Int> usedPositions = new List<Vector2Int>();
     private int selectedNumberOfRooms;
 
@@ -19,7 +24,9 @@ public class LevelGenerator : MonoBehaviour
     private GameObject[] bossRooms;
     private GameObject[] spiritRooms;
     private GameObject[] treasureRooms;
+
     private Vector2Int origin;
+
     private GameObject playerInstance;
     private GameObject spiritInstance;
 
@@ -91,30 +98,73 @@ public class LevelGenerator : MonoBehaviour
 
     public void SpawnSpirit()
     {
-        playerInstance.SetActive(false);
+        playerInstance.GetComponent<PlayerController>().enabled = false;
+        playerInstance.GetComponent<Gun>().enabled = false;
+        playerInstance.GetComponentInChildren<PlayerCameraController>().enabled = false;
+        playerInstance.GetComponent<PlayerMovement>().enabled = false;
+        Camera[] cs = playerInstance.GetComponentsInChildren<Camera>();
+        for (int i = 0; i < cs.Length; i++)
+        {
+            cs[i].enabled = false;
+        }
+
+        Transform[] pts = playerInstance.GetComponentsInChildren<Transform>();
+        for (int i = 0; i < pts.Length; i++)
+        {
+            pts[i].gameObject.layer = 0;
+        }
 
         if (spiritInstance == null)
         {
             spiritInstance = Instantiate(player);
             spiritInstance.layer = 16;
-            Transform[] ts = GetComponentsInChildren<Transform>();
+            Transform[] ts = spiritInstance.GetComponentsInChildren<Transform>();
             for (int i = 0; i < ts.Length; i++)
             {
                 ts[i].gameObject.layer = 16;
             }
+
+            Camera[] scs = spiritInstance.GetComponentsInChildren<Camera>();
+            for (int i = 0; i < scs.Length; i++)
+            {
+                scs[i].GetComponent<PostProcessVolume>().profile = spiritWorldProfile;
+                if (i == 0)
+                {
+                    scs[i].cullingMask = spiritWorldLayerMask;
+                }
+            }
         }
         else
         {
+            spiritInstance.transform.localEulerAngles = Vector3.zero;
+            spiritInstance.GetComponent<Gun>().SpawnModel();
             spiritInstance.SetActive(true);
         }
-        
-        spiritInstance.transform.position = rooms[origin.x, origin.y].transform.position + new Vector3(0, 3, 0);
+        spiritInstance.transform.position = playerInstance.transform.position;
+        spiritInstance.transform.eulerAngles = playerInstance.transform.eulerAngles;
+        //spiritInstance.transform.position = rooms[origin.x, origin.y].transform.position + new Vector3(0, 1, 0);
     }
 
     public void ReactivatePlayer()
     {
         spiritInstance.SetActive(false);
-        playerInstance.SetActive(true);
+
+        playerInstance.GetComponent<PlayerController>().enabled = true;
+        playerInstance.GetComponent<Gun>().enabled = true;
+        playerInstance.GetComponent<Gun>().SpawnModel();
+        playerInstance.GetComponentInChildren<PlayerCameraController>().enabled = true;
+        playerInstance.GetComponent<PlayerMovement>().enabled = true;
+        Camera[] cs = playerInstance.GetComponentsInChildren<Camera>();
+        for (int i = 0; i < cs.Length; i++)
+        {
+            cs[i].enabled = true;
+        }
+
+        Transform[] pts = playerInstance.GetComponentsInChildren<Transform>();
+        for (int i = 0; i < pts.Length; i++)
+        {
+            pts[i].gameObject.layer = 9;
+        }
     }
 
     private Vector2Int NewPosition()

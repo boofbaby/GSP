@@ -10,11 +10,14 @@ public class GeneratedWeapon
     public float damageModifier;
     public int reserveAmmunition;
     public int ammunitionInMagazine;
+    public float accuracy;
 
     public GeneratedWeapon(WeaponTier _tier, WeaponTemplate _template)
     {
         damageModifier = Random.Range(_tier.damageModifier.x, _tier.damageModifier.y);
         template = _template;
+
+        accuracy = Random.Range(0.5f, 1f);
 
         reserveAmmunition = template.startingAmmunition;
         ammunitionInMagazine = template.roundsPerMagazine;
@@ -25,6 +28,8 @@ public class GeneratedWeapon
         damageModifier = _old.damageModifier;
         template = _old.template;
 
+        accuracy = _old.accuracy;
+
         reserveAmmunition = _old.reserveAmmunition;
         ammunitionInMagazine = _old.ammunitionInMagazine;
     }
@@ -33,6 +38,8 @@ public class GeneratedWeapon
     {
         damageModifier = _old.damageModifier;
         template = _old.template;
+
+        accuracy = _old.accuracy;
 
         reserveAmmunition = _old.reserveAmmunition;
         ammunitionInMagazine = _old.ammunitionInMagazine;
