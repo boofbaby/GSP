@@ -33,7 +33,7 @@ public class Gun : MonoBehaviour
         if (gunModel == null) SpawnModel();
 
         TakeInput();
-
+        
         gunModel.transform.localPosition = gunOrigin + currentOffset;
         gunModel.transform.localEulerAngles = gunAngleOrigin + currentAngleOffset;
     }
@@ -103,8 +103,15 @@ public class Gun : MonoBehaviour
 
     private void LerpModelPosition()
     {
-        currentOffset = Vector3.Lerp(currentOffset, Vector3.zero, 0.01f);
-        currentAngleOffset = Vector3.Lerp(currentAngleOffset, Vector3.zero, 0.01f);
+        if (state == "reload")
+        {
+            currentOffset = Vector3.Lerp(currentOffset, new Vector3(0, -1, 0), 0.001f);
+        }
+        else
+        {
+            currentOffset = Vector3.Lerp(currentOffset, Vector3.zero, 0.01f);
+            currentAngleOffset = Vector3.Lerp(currentAngleOffset, Vector3.zero, 0.01f);
+        }
     }
     
     private void Shoot()
